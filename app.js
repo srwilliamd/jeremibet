@@ -1,84 +1,60 @@
-function calculateManual(){
-let total=parseFloat(document.getElementById("total").value);
-let percent=parseFloat(document.getElementById("percent").value);
-let oddA=parseFloat(document.getElementById("oddA").value);
-let oddB=parseFloat(document.getElementById("oddB").value);
+const casas=["BetPlay","Betano","Bwin","1xBet","Bet365","Codere","Betsson"];
+function num(v){return parseFloat(v.replace(/,/g,'.'))}
 
-if(!total||!oddA||!oddB){
-document.getElementById("manualResult").innerHTML="";
-return;
+function calcManual(){
+let t=num(total.value||0),p=num(percent.value||0),a=num(oddA.value||0),b=num(oddB.value||0);
+if(!t||!a||!b){manualResult.innerHTML="";return}
+let sA=t/(1+(a/b)),sB=t-sA,ing=sA*a,gan=ing-t;
+if(p>0){gan=t*(p/100);ing=t+gan}
+manualResult.innerHTML=`<div class=resultBox>Apuesta A $${sA.toFixed(2)}<br>Apuesta B $${sB.toFixed(2)}<br>Ganancia $${gan.toFixed(2)}</div>`;
 }
+["total","percent","oddA","oddB"].forEach(id=>document.addEventListener("input",e=>{if(e.target.id===id)calcManual()}));
 
-let stakeA=total/(1+(oddA/oddB));
-let stakeB=total-stakeA;
+imageInput.addEventListener("change",async e=>{
+let f=e.target.files[0]; if(!f)return;
+status.innerText="Procesando imagen...";
+let {data:{text}}=await Tesseract.recognize(f,'eng');
+parse(text);
+});
 
-let income=stakeA*oddA;
-let profit=income-total;
-
-if(percent>0){
-profit=total*(percent/100);
-income=total+profit;
-}
-
-document.getElementById("manualResult").innerHTML=`
-<div class="resultBox">
-Apuesta A: $${stakeA.toFixed(2)}<br>
-Apuesta B: $${stakeB.toFixed(2)}<br>
-Ingresos: $${income.toFixed(2)}<br>
-Ganancia: $${profit.toFixed(2)}
+function parse(text){
+let dec=text.match(/\d+\.\d+/g)||[];
+let out="";
+for(let i=0;i<dec.length;i+=2){
+if(!dec[i+1])continue;
+out+=`<div class=resultBox>
+Cuota A ${dec[i]} vs Cuota B ${dec[i+1]}
+<input placeholder="Monto invertir" oninput="calcDyn(this,${dec[i]},${dec[i+1]})">
+<button onclick="saveGain(this)">Guardar ganancia</button>
+<div class=resp></div>
 </div>`;
 }
-
-["total","percent","oddA","oddB"].forEach(id=>{
-document.addEventListener("input",e=>{
-if(e.target.id===id) calculateManual();
-});
-});
-
-document.getElementById("imageInput").addEventListener("change",async function(e){
-const file=e.target.files[0];
-if(!file)return;
-document.getElementById("status").innerText="Procesando imagen...";
-const {data:{text}}=await Tesseract.recognize(file,'eng');
-parseSurebets(text);
-});
-
-function parseSurebets(text){
-let matches=text.match(/\d+\.\d+/g);
-if(!matches){
-document.getElementById("results").innerHTML="0 surebets detectadas";
-return;
+results.innerHTML=out||"0 surebets detectadas";
 }
 
-let container="";
-
-for(let i=0;i<matches.length;i+=2){
-if(matches[i+1]){
-container+=`
-<div class="resultBox">
-Surebet detectada<br>
-Cuota A: ${matches[i]}<br>
-Cuota B: ${matches[i+1]}<br>
-<input type="number" placeholder="Monto total" oninput="calculateDynamic(this, ${matches[i]}, ${matches[i+1]})">
-<div class="dynamicResult"></div>
-</div>`;
-}}
-
-document.getElementById("results").innerHTML=container;
+function calcDyn(inp,a,b){
+let t=num(inp.value||0); if(!t)return;
+let sA=t/(1+(a/b)),sB=t-sA,ing=sA*a,gan=ing-t;
+inp.nextElementSibling.nextElementSibling.innerHTML=`Apuesta A $${sA.toFixed(2)}<br>Apuesta B $${sB.toFixed(2)}<br>Ganancia $${gan.toFixed(2)}`;
+inp.dataset.gan=gan.toFixed(2);
 }
 
-function calculateDynamic(input,oddA,oddB){
-let total=parseFloat(input.value);
-if(!total)return;
+function saveGain(btn){
+let g=parseFloat(btn.previousElementSibling.dataset.gan||0);
+if(!g)return;
+let d=new Date().toISOString().slice(0,10);
+let hist=JSON.parse(localStorage.getItem("jemi_hist")||"{}");
+hist[d]=(hist[d]||0)+g;
+localStorage.setItem("jemi_hist",JSON.stringify(hist));
+alert("Ganancia guardada");
+}
 
-let stakeA=total/(1+(oddA/oddB));
-let stakeB=total-stakeA;
-
-let income=stakeA*oddA;
-let profit=income-total;
-
-input.nextElementSibling.innerHTML=`
-Apuesta A: $${stakeA.toFixed(2)}<br>
-Apuesta B: $${stakeB.toFixed(2)}<br>
-Ganancia: $${profit.toFixed(2)}`;
+function toggleHist(){
+let ul=hist; ul.classList.toggle("hidden"); ul.innerHTML="";
+let h=JSON.parse(localStorage.getItem("jemi_hist")||"{}");
+Object.keys(h).forEach(k=>{
+let li=document.createElement("li");
+li.textContent=k+" → $"+h[k].toFixed(2);
+ul.appendChild(li);
+});
 }

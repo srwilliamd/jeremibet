@@ -2,36 +2,37 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JEMI Bet PRO</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JEMI Bet Ultimate</title>
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
-<link rel="icon" href="assets/icon-192.png">
 </head>
 <body>
 
-<header>
-<img src="assets/logo.png" class="logo">
-</header>
+<header><img src="assets/logo.png" class="logo"></header>
 
 <section class="card">
-<h2>Calculadora Manual Automática</h2>
-
-<input type="number" id="total" placeholder="Apuesta total (COP)">
-<input type="number" id="percent" placeholder="% manual">
+<h3>Calculadora Manual</h3>
+<input id="total" placeholder="Apuesta total">
+<input id="percent" placeholder="% manual">
 <div class="row">
-<input type="number" id="oddA" placeholder="Cuota A" step="0.01">
-<input type="number" id="oddB" placeholder="Cuota B" step="0.01">
+<input id="oddA" placeholder="Cuota A">
+<input id="oddB" placeholder="Cuota B">
 </div>
-
 <div id="manualResult"></div>
 </section>
 
 <section class="card">
-<h2>📷 Analizar Imagen Surebet</h2>
+<h3>📷 Analizar Imagen</h3>
 <input type="file" id="imageInput">
 <p id="status"></p>
 <div id="results"></div>
+</section>
+
+<section class="card">
+<h3>📊 Mis Ganancias</h3>
+<button onclick="toggleHist()">Ver mis ganancias</button>
+<ul id="hist" class="hidden"></ul>
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
