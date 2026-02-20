@@ -3,57 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>JEMI Bet Calculadora</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0b0b0b">
-<link rel="apple-touch-icon" href="icon-192.png">
+<title>JEMI Bet AI</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 </head>
 <body>
-
 <div class="app">
+<h2>JEMI Bet</h2>
 
-<div class="logo">
-<img src="icon-512.png" alt="JEMI Bet">
+<div class="card">
+<h3>Calculadora manual</h3>
+<input id="total" placeholder="Apuesta total (COP)">
+<input id="porcentaje" placeholder="% manual">
+<div class="row">
+<input id="cuota1" placeholder="Cuota A">
+<input id="cuota2" placeholder="Cuota B">
+</div>
+<div id="manualResultado"></div>
 </div>
 
 <div class="card">
-
-<label>Apuesta total (COP)</label>
-<input id="total" inputmode="numeric" placeholder="200.000">
-
-<label>Porcentaje del juego (%)</label>
-<input id="porcentaje" type="number" step="0.01" placeholder="8.80">
-
-<div class="row">
-<input id="cuota1" inputmode="numeric" placeholder="Cuota 1">
-<input id="cuota2" inputmode="numeric" placeholder="Cuota 2">
-</div>
-
-<div class="result-grid">
-<div class="tile"><span>Apuesta 1</span><b id="stake1">—</b></div>
-<div class="tile"><span>Apuesta 2</span><b id="stake2">—</b></div>
-</div>
-
-<div class="result-grid">
-<div class="tile"><span>Ingresos</span><b id="ingreso">—</b></div>
-<div class="tile"><span>Ganancia</span><b id="beneficio">—</b></div>
-</div>
-
-<div class="actions">
-<button id="guardar">Guardar día</button>
-<button id="verMas">Ver más</button>
-</div>
-
-<div id="historial" class="historial hidden">
-<h3>Ganancias por día</h3>
-<ul id="lista"></ul>
-<div class="total">Total acumulado: <b id="totalAcum">$ 0</b></div>
+<h3>📷 Analizar imagen Surebet</h3>
+<input type="file" id="uploadImage" accept="image/*">
+<div id="status"></div>
+<div id="surebets"></div>
 </div>
 
 </div>
-</div>
-
 <script src="app.js"></script>
 </body>
 </html>

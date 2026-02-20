@@ -1,84 +1,68 @@
 
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
+const casas=["BetPlay","Betano","Bwin","1xBet","Betsson","Codere","Bet365"];
 
-function limpiarNumero(v){
- if(!v) return NaN;
- return parseFloat(v.toString().replace(/\./g,'').replace(/,/g,'.'));
+function limpiar(v){return parseFloat(v.replace(/\./g,'').replace(',','.'));}
+
+function calc(total,p,o1,o2){
+ let gan=total*(p/100);
+ let retorno=total+gan;
+ let a=retorno/o1;
+ let b=retorno/o2;
+ let f=total/(a+b);
+ let s1=a*f,s2=b*f;
+ let ingreso=Math.min(s1*o1,s2*o2);
+ return {s1,s2,ingreso,ganancia:ingreso-total};
 }
 
-function formatCOP(n){
- return n.toLocaleString('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2});
-}
-
-function formatMilesInput(el){
- let raw = el.value.replace(/\D/g,'');
- if(!raw){el.value='';return;}
- el.value = raw.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
-}
-
-function formatCuota(el){
- let d = el.value.replace(/\D/g,'');
- if(d.length>=2){ el.value = d[0] + '.' + d.slice(1,3); }
- else{ el.value = d; }
-}
-
-function calcular(){
- let total = limpiarNumero(document.getElementById('total').value);
- let p = parseFloat(document.getElementById('porcentaje').value);
- let o1 = parseFloat(document.getElementById('cuota1').value);
- let o2 = parseFloat(document.getElementById('cuota2').value);
- if(!total||!p||!o1||!o2) return;
-
- let retorno = total * (1 + (p/100));
- let s1 = retorno / o1;
- let s2 = retorno / o2;
- let ben = retorno - total;
-
- document.getElementById('stake1').innerText = '$ ' + formatCOP(s1);
- document.getElementById('stake2').innerText = '$ ' + formatCOP(s2);
- document.getElementById('ingreso').innerText = '$ ' + formatCOP(retorno);
- document.getElementById('beneficio').innerText = '$ ' + formatCOP(ben);
-}
-
-document.getElementById('total').addEventListener('input',function(){formatMilesInput(this);calcular();});
-document.getElementById('cuota1').addEventListener('input',function(){formatCuota(this);calcular();});
-document.getElementById('cuota2').addEventListener('input',function(){formatCuota(this);calcular();});
-document.getElementById('porcentaje').addEventListener('input',calcular);
-
-function hoy(){
- let d=new Date();
- return d.toISOString().slice(0,10);
-}
-
-function guardarDia(){
- let benText = document.getElementById('beneficio').innerText;
- if(!benText || benText==='—') return;
- let ben = parseFloat(benText.replace(/[^0-9,]/g,'').replace(/\./g,'').replace(',','.'));
- if(!ben) return;
- let data = JSON.parse(localStorage.getItem('jemi_hist')||'{}');
- let key = hoy();
- data[key] = (data[key]||0) + ben;
- localStorage.setItem('jemi_hist', JSON.stringify(data));
- renderHist();
-}
-
-function renderHist(){
- let data = JSON.parse(localStorage.getItem('jemi_hist')||'{}');
- let ul = document.getElementById('lista');
- ul.innerHTML='';
- let total=0;
- Object.keys(data).sort().forEach(k=>{
-   total+=data[k];
-   let li=document.createElement('li');
-   li.textContent = k + ' → $ ' + formatCOP(data[k]);
-   ul.appendChild(li);
- });
- document.getElementById('totalAcum').innerText = '$ ' + formatCOP(total);
-}
-
-document.getElementById('guardar').addEventListener('click',guardarDia);
-document.getElementById('verMas').addEventListener('click',()=>{
- document.getElementById('historial').classList.toggle('hidden');
- renderHist();
+document.getElementById("uploadImage").addEventListener("change", async e=>{
+ const file=e.target.files[0];
+ document.getElementById("status").innerText="Leyendo imagen...";
+ const { data:{ text }} = await Tesseract.recognize(file,'eng');
+ document.getElementById("status").innerText="Procesando texto...";
+ parseSurebets(text);
 });
 
+function parseSurebets(text){
+ const lines=text.split("\n").map(l=>l.trim()).filter(l=>l);
+ const bets=[];
+ for(let i=0;i<lines.length;i++){
+   if(lines[i].includes("%")){
+     const p=parseFloat(lines[i]);
+     let o1=null,o2=null,c1="",c2="";
+     for(let j=i+1;j<i+8 && j<lines.length;j++){
+        const l=lines[j];
+        const dec=l.match(/\d\.\d{2}/);
+        casas.forEach(c=>{ if(l.includes(c)){ if(!c1) c1=c; else c2=c; }});
+        if(dec){ if(!o1) o1=parseFloat(dec[0]); else if(!o2) o2=parseFloat(dec[0]); }
+     }
+     if(p && o1 && o2) bets.push({p,o1,o2,c1,c2});
+   }
+ }
+ renderBets(bets);
+}
+
+function renderBets(bets){
+ const cont=document.getElementById("surebets");
+ cont.innerHTML="<h4>"+bets.length+" surebets detectadas</h4>";
+ bets.forEach((b,i)=>{
+   const div=document.createElement("div");
+   div.className="surebet";
+   div.innerHTML=`
+   <b>Surebet #${i+1} — ${b.p}%</b><br>
+   ${b.c1||""} ${b.o1} vs ${b.c2||""} ${b.o2}<br>
+   <input placeholder="Monto invertir" id="m${i}">
+   <button onclick="calcBet(${i},${b.p},${b.o1},${b.o2})">Calcular</button>
+   <div id="r${i}"></div>`;
+   cont.appendChild(div);
+ });
+}
+
+window.calcBet=function(i,p,o1,o2){
+ const total=limpiar(document.getElementById("m"+i).value);
+ if(!total) return;
+ const r=calc(total,p,o1,o2);
+ document.getElementById("r"+i).innerHTML=
+ `Apuesta A: $${r.s1.toFixed(2)}<br>
+  Apuesta B: $${r.s2.toFixed(2)}<br>
+  Ganancia: $${r.ganancia.toFixed(2)}`;
+}
