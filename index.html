@@ -3,32 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>JEMI Bet</title>
+<title>JEMI Bet Calculadora</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0b0b0b">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="app">
-<div class="logo"><img src="icon-512.png" alt="logo"></div>
+
+<div class="logo">
+<img src="icon-512.png" alt="JEMI Bet">
+</div>
 
 <div class="card">
 
 <label>Apuesta total (COP)</label>
-<input id="total" inputmode="numeric" placeholder="100.000">
+<input id="total" inputmode="numeric" placeholder="200.000">
 
-<label>% del juego (manual)</label>
-<input id="porcentaje" inputmode="decimal" placeholder="13.3">
+<label>Porcentaje del juego (%)</label>
+<input id="porcentaje" type="number" step="0.01" placeholder="8.80">
 
 <div class="row">
-<input id="cuota1" inputmode="numeric" placeholder="Cuota A">
-<input id="cuota2" inputmode="numeric" placeholder="Cuota B">
+<input id="cuota1" inputmode="numeric" placeholder="Cuota 1">
+<input id="cuota2" inputmode="numeric" placeholder="Cuota 2">
 </div>
 
 <div class="result-grid">
-<div class="tile"><span>Apuesta A</span><b id="stake1">—</b></div>
-<div class="tile"><span>Apuesta B</span><b id="stake2">—</b></div>
+<div class="tile"><span>Apuesta 1</span><b id="stake1">—</b></div>
+<div class="tile"><span>Apuesta 2</span><b id="stake2">—</b></div>
 </div>
 
 <div class="result-grid">
@@ -36,18 +40,13 @@
 <div class="tile"><span>Ganancia</span><b id="beneficio">—</b></div>
 </div>
 
-<div class="result-grid">
-<div class="tile"><span>% real</span><b id="percentReal">—</b></div>
-<div class="tile"><span>Estado</span><b id="estado">—</b></div>
-</div>
-
 <div class="actions">
-<button id="guardar">Guardar ganancia</button>
-<button id="verGanancias">Ver mis ganancias</button>
+<button id="guardar">Guardar día</button>
+<button id="verMas">Ver más</button>
 </div>
 
-<div id="panelGanancias" class="historial hidden">
-<h3>Mis ganancias</h3>
+<div id="historial" class="historial hidden">
+<h3>Ganancias por día</h3>
 <ul id="lista"></ul>
 <div class="total">Total acumulado: <b id="totalAcum">$ 0</b></div>
 </div>
