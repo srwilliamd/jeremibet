@@ -1,0 +1,8 @@
+
+body{background:#0b0b0b;color:#fff;font-family:Arial;margin:0;padding:20px}
+.app{max-width:700px;margin:auto}
+.card{background:#141414;padding:15px;border-radius:12px;margin-bottom:15px}
+input{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #333;background:#0f0f0f;color:#fff}
+.row{display:flex;gap:10px}
+.surebet{border:1px solid #333;padding:10px;border-radius:10px;margin-top:10px}
+button{background:#d4af37;border:none;padding:10px;border-radius:8px;font-weight:bold;margin-top:5px}
