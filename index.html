@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JEMI Bet PRO</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="assets/icon-192.png">
+</head>
+<body>
+
+<header>
+<img src="assets/logo.png" class="logo">
+</header>
+
+<section class="card">
+<h2>Calculadora Manual Automática</h2>
+
+<input type="number" id="total" placeholder="Apuesta total (COP)">
+<input type="number" id="percent" placeholder="% manual">
+<div class="row">
+<input type="number" id="oddA" placeholder="Cuota A" step="0.01">
+<input type="number" id="oddB" placeholder="Cuota B" step="0.01">
+</div>
+
+<div id="manualResult"></div>
+</section>
+
+<section class="card">
+<h2>📷 Analizar Imagen Surebet</h2>
+<input type="file" id="imageInput">
+<p id="status"></p>
+<div id="results"></div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
