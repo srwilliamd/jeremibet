@@ -1,0 +1,16 @@
+
+body{margin:0;background:#0b0b0b;color:#fff;font-family:system-ui;padding:16px}
+.app{max-width:520px;margin:auto}
+.logo{text-align:center;margin-bottom:10px}
+.logo img{width:120px}
+.card{background:#141414;padding:20px;border-radius:18px}
+label{opacity:.85;font-size:14px}
+input{width:100%;padding:14px;margin:8px 0;border-radius:12px;border:1px solid #2b2b2b;background:#0f0f0f;color:#fff;font-size:16px}
+.row{display:flex;gap:10px}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.tile{background:#0f0f0f;padding:14px;border-radius:12px;text-align:center}
+.actions{display:flex;gap:10px;margin-top:14px}
+button{flex:1;padding:14px;border:none;border-radius:12px;background:#d4af37;color:#000;font-weight:700}
+.hidden{display:none}
+.good{color:#2ecc71}
+.bad{color:#e74c3c}

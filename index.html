@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JEMI Bet</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b0b0b">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+<div class="logo"><img src="icon-512.png" alt="logo"></div>
+
+<div class="card">
+
+<label>Apuesta total (COP)</label>
+<input id="total" inputmode="numeric" placeholder="100.000">
+
+<label>% del juego (manual)</label>
+<input id="porcentaje" inputmode="decimal" placeholder="13.3">
+
+<div class="row">
+<input id="cuota1" inputmode="numeric" placeholder="Cuota A">
+<input id="cuota2" inputmode="numeric" placeholder="Cuota B">
+</div>
+
+<div class="result-grid">
+<div class="tile"><span>Apuesta A</span><b id="stake1">—</b></div>
+<div class="tile"><span>Apuesta B</span><b id="stake2">—</b></div>
+</div>
+
+<div class="result-grid">
+<div class="tile"><span>Ingresos</span><b id="ingreso">—</b></div>
+<div class="tile"><span>Ganancia</span><b id="beneficio">—</b></div>
+</div>
+
+<div class="result-grid">
+<div class="tile"><span>% real</span><b id="percentReal">—</b></div>
+<div class="tile"><span>Estado</span><b id="estado">—</b></div>
+</div>
+
+<div class="actions">
+<button id="guardar">Guardar ganancia</button>
+<button id="verGanancias">Ver mis ganancias</button>
+</div>
+
+<div id="panelGanancias" class="historial hidden">
+<h3>Mis ganancias</h3>
+<ul id="lista"></ul>
+<div class="total">Total acumulado: <b id="totalAcum">$ 0</b></div>
+</div>
+
+</div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
